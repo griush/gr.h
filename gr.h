@@ -8,12 +8,46 @@
 #include <string.h>
 
 /*
- * define auto properly
+ * define cstd
  */
 #if __STDC_VERSION__ >= 202311L
+  #define GR_CSTD_23 1
+#elif __STDC_VERSION__ >= 201710L
+  #define GR_CSTD_17 1
+#elif __STDC_VERSION__ >= 201112L
+  #define GR_CSTD_11 1
+#elif __STDC_VERSION__ >= 199901L
+  #define GR_CSTD_99 1
+#elif defined(__STDC__)
+  #define GR_CSTD_89 1
+#else
+  #define GR_CSTD_UNKNOWN 1
+#endif
+
+/*
+ * define compiler
+ */
+#if defined(__clang__)
+  #define GR_COMPILER_CLANG 1
+#elif defined(__GNUC__) || defined(__GNUG__)
+  #define GR_COMPILER_GCC 1
+#elif defined(_MSC_VER)
+  #define GR_COMPILER_MSVC 1
+#elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
+  #define GR_COMPILER_INTEL 1
+#elif defined(__TINYC__)
+  #define GR_COMPILER_TINYC 1
+#else
+  #define GR_COMPILER_UNKNOWN 1
+#endif
+
+/*
+ * define auto properly
+ */
+#if GR_CSTD_23
   // C23 or later
   // auto is native
-#elif defined(__GNUC__) || defined(__clang__)
+#elif GR_COMPILER_GCC || GR_COMPILER_CLANG
   #define auto __auto_type
 #else
   #error "This compiler does not support auto-style type inference"
@@ -30,6 +64,20 @@ typedef struct {
   const char* p;
   size_t len;
 } gr_str_view_t;
+
+static inline gr_str_view_t gr_str_view_empty() {
+  return (gr_str_view_t){
+    .p = NULL,
+    .len = 0,
+  };
+}
+
+static inline gr_str_view_t gr_str_view_from_cstr(const char* str) {
+  return (gr_str_view_t){
+    .p = str,
+    .len = strlen(str),
+  };
+}
 
 static inline bool gr_str_view_eq(gr_str_view_t a, gr_str_view_t b) {
   return a.len == b.len && memcmp(a.p, b.p, a.len) == 0;
