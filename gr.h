@@ -71,15 +71,27 @@ typedef int32_t i32;
 typedef uint64_t u64;
 typedef int64_t i64;
 
-GR_STATIC_ASSERT(sizeof(u8)  == sizeof(i8), "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u8) == sizeof(i8), "incorrect type size");
 GR_STATIC_ASSERT(sizeof(u16) == sizeof(i16), "incorrect type size");
 GR_STATIC_ASSERT(sizeof(u32) == sizeof(i32), "incorrect type size");
 GR_STATIC_ASSERT(sizeof(u64) == sizeof(i64), "incorrect type size");
 
-GR_STATIC_ASSERT(sizeof(u8)  == 1, "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u8) == 1, "incorrect type size");
 GR_STATIC_ASSERT(sizeof(u16) == 2, "incorrect type size");
 GR_STATIC_ASSERT(sizeof(u32) == 4, "incorrect type size");
 GR_STATIC_ASSERT(sizeof(u64) == 8, "incorrect type size");
+
+#ifndef GR_DEBUG_TRAP
+  #if GR_COMPILER_MSVC
+    #if _MSC_VER < 1300
+      #define GR_DEBUG_TRAP() __asm int 3 /* Trap to debugger! */
+    #else
+      #define GR_DEBUG_TRAP() __debugbreak()
+    #endif
+  #else
+    #define GR_DEBUG_TRAP() __builtin_trap()
+  #endif
+#endif
 
 /*
  * define auto properly
@@ -91,6 +103,52 @@ GR_STATIC_ASSERT(sizeof(u64) == 8, "incorrect type size");
   #define auto __auto_type
 #else
   #error "This compiler does not support auto-style type inference"
+#endif
+
+/*
+ * other helpers
+ */
+#ifndef GR_BIT
+  #define GR_BIT(x) (1 << (x))
+#endif
+
+#ifndef gr_min
+  #define gr_min(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
+#ifndef gr_max
+  #define gr_max(a, b) ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef gr_min3
+  #define gr_min3(a, b, c) gr_min(gr_min(a, b), c)
+#endif
+
+#ifndef gr_max3
+  #define gr_max3(a, b, c) gr_max(gr_max(a, b), c)
+#endif
+
+#ifndef gr_clamp
+  #define gr_clamp(x, lower, upper) gr_min(gr_max((x), (lower)), (upper))
+#endif
+
+#ifndef gr_clamp01
+  #define gr_clamp01(x) gr_clamp((x), 0, 1)
+#endif
+
+#ifndef gr_is_between
+  #define gr_is_between(x, lower, upper) (((lower) <= (x)) && ((x) <= (upper)))
+#endif
+
+#ifndef gr_abs
+  #define gr_abs(x) ((x) < 0 ? -(x) : (x))
+#endif
+
+#ifndef gr_kilobytes
+  #define gr_kilobytes(x) ((x) * (i64)(1024))
+  #define gr_megabytes(x) (gr_kilobytes(x) * (i64)(1024))
+  #define gr_gigabytes(x) (gr_megabytes(x) * (i64)(1024))
+  #define gr_terabytes(x) (gr_gigabytes(x) * (i64)(1024))
 #endif
 
 /*
