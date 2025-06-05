@@ -10,18 +10,24 @@
 /*
  * define cstd
  */
+#define GR_CSTD_23 202311L
+#define GR_CSTD_17 201710L
+#define GR_CSTD_11 201112L
+#define GR_CSTD_99 199901L
+#define GR_CSTD_89 198901L
+
 #if __STDC_VERSION__ >= 202311L
-  #define GR_CSTD_23 1
+  #define GR_CSTD GR_CSTD_23
 #elif __STDC_VERSION__ >= 201710L
-  #define GR_CSTD_17 1
+  #define GR_CSTD GR_CSTD_17
 #elif __STDC_VERSION__ >= 201112L
-  #define GR_CSTD_11 1
+  #define GR_CSTD GR_CSTD_11
 #elif __STDC_VERSION__ >= 199901L
-  #define GR_CSTD_99 1
+  #define GR_CSTD GR_CSTD_99
 #elif defined(__STDC__)
-  #define GR_CSTD_89 1
+  #define GR_CSTD GR_CSTD_89
 #else
-  #define GR_CSTD_UNKNOWN 1
+  #define GR_CSTD 1L
 #endif
 
 /*
@@ -41,10 +47,44 @@
   #define GR_COMPILER_UNKNOWN 1
 #endif
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+  #ifndef _CRT_SECURE_NO_WARNINGS
+    #define _CRT_SECURE_NO_WARNINGS
+  #endif
+#endif
+
+#ifndef GR_STATIC_ASSERT
+  #if GR_CSTD >= GR_CSTD_11
+    #define GR_STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)
+  #else
+    #error "TODO: define static_assert for older std"
+  #endif
+#endif
+
+#include <stdint.h>
+typedef uint8_t u8;
+typedef int8_t i8;
+typedef uint16_t u16;
+typedef int16_t i16;
+typedef uint32_t u32;
+typedef int32_t i32;
+typedef uint64_t u64;
+typedef int64_t i64;
+
+GR_STATIC_ASSERT(sizeof(u8)  == sizeof(i8), "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u16) == sizeof(i16), "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u32) == sizeof(i32), "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u64) == sizeof(i64), "incorrect type size");
+
+GR_STATIC_ASSERT(sizeof(u8)  == 1, "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u16) == 2, "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u32) == 4, "incorrect type size");
+GR_STATIC_ASSERT(sizeof(u64) == 8, "incorrect type size");
+
 /*
  * define auto properly
  */
-#if GR_CSTD_23
+#if GR_CSTD >= GR_CSTD_23
   // C23 or later
   // auto is native
 #elif GR_COMPILER_GCC || GR_COMPILER_CLANG
@@ -67,15 +107,15 @@ typedef struct {
 
 static inline gr_str_view_t gr_str_view_empty() {
   return (gr_str_view_t){
-    .p = NULL,
-    .len = 0,
+      .p = NULL,
+      .len = 0,
   };
 }
 
 static inline gr_str_view_t gr_str_view_from_cstr(const char* str) {
   return (gr_str_view_t){
-    .p = str,
-    .len = strlen(str),
+      .p = str,
+      .len = strlen(str),
   };
 }
 
@@ -176,4 +216,4 @@ size_t _gr_da_capacity(void* arr) {
   return GR_DA_HEADER(arr)->capacity;
 }
 
-#endif // GR_IMPLEMENTATION
+#endif // GR_IMPL

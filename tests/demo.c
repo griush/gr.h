@@ -23,7 +23,7 @@ int main(void) {
   printf("str_view_eq (expect 1): %d\n", gr_str_view_eq(gr_h_1, gr_h_2));
 
   printf("gr_da\n");
-  int* arr = NULL;
+  i8* arr = NULL;
 
   for (int i = 0; i < 10; ++i) {
     gr_da_append(arr, i * 10);
