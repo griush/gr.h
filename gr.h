@@ -1,9 +1,16 @@
 #ifndef GR_H
 #define GR_H
 
+/*
+ * commonly used includes
+ */
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdint.h>
 
+/*
+ * used includes for data structures
+ */
 #include <stdlib.h>
 #include <string.h>
 
@@ -16,16 +23,8 @@
 #define GR_CSTD_99 199901L
 #define GR_CSTD_89 198901L
 
-#if __STDC_VERSION__ >= 202311L
-  #define GR_CSTD GR_CSTD_23
-#elif __STDC_VERSION__ >= 201710L
-  #define GR_CSTD GR_CSTD_17
-#elif __STDC_VERSION__ >= 201112L
-  #define GR_CSTD GR_CSTD_11
-#elif __STDC_VERSION__ >= 199901L
-  #define GR_CSTD GR_CSTD_99
-#elif defined(__STDC__)
-  #define GR_CSTD GR_CSTD_89
+#ifdef __STDC_VERSION__
+  #define GR_CSTD __STDC_VERSION__
 #else
   #define GR_CSTD 1L
 #endif
@@ -57,29 +56,9 @@
   #if GR_CSTD >= GR_CSTD_11
     #define GR_STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)
   #else
-    #error "TODO: define static_assert for older std"
+    #define GR_STATIC_ASSERT(cond, msg)
   #endif
 #endif
-
-#include <stdint.h>
-typedef uint8_t u8;
-typedef int8_t i8;
-typedef uint16_t u16;
-typedef int16_t i16;
-typedef uint32_t u32;
-typedef int32_t i32;
-typedef uint64_t u64;
-typedef int64_t i64;
-
-GR_STATIC_ASSERT(sizeof(u8) == sizeof(i8), "incorrect type size");
-GR_STATIC_ASSERT(sizeof(u16) == sizeof(i16), "incorrect type size");
-GR_STATIC_ASSERT(sizeof(u32) == sizeof(i32), "incorrect type size");
-GR_STATIC_ASSERT(sizeof(u64) == sizeof(i64), "incorrect type size");
-
-GR_STATIC_ASSERT(sizeof(u8) == 1, "incorrect type size");
-GR_STATIC_ASSERT(sizeof(u16) == 2, "incorrect type size");
-GR_STATIC_ASSERT(sizeof(u32) == 4, "incorrect type size");
-GR_STATIC_ASSERT(sizeof(u64) == 8, "incorrect type size");
 
 #ifndef GR_DEBUG_TRAP
   #if GR_COMPILER_MSVC
@@ -149,6 +128,21 @@ GR_STATIC_ASSERT(sizeof(u64) == 8, "incorrect type size");
   #define gr_megabytes(x) (gr_kilobytes(x) * (i64)(1024))
   #define gr_gigabytes(x) (gr_megabytes(x) * (i64)(1024))
   #define gr_terabytes(x) (gr_gigabytes(x) * (i64)(1024))
+#endif
+
+/*
+ * override allocator
+ */
+#ifndef gr_malloc
+  #define gr_malloc malloc
+#endif
+
+#ifndef gr_realloc
+  #define gr_realloc realloc
+#endif
+
+#ifndef gr_free
+  #define gr_free free
 #endif
 
 /*
@@ -229,8 +223,8 @@ typedef struct {
 void* _gr_da_append(void** arr, size_t elem_size, void* val) {
   if (*arr == NULL) {
     size_t cap = 4;
-    _gr_da_header* header =
-        (_gr_da_header*)malloc(sizeof(_gr_da_header) + (cap - 1) * elem_size);
+    _gr_da_header* header = (_gr_da_header*)gr_malloc(sizeof(_gr_da_header) +
+                                                      (cap - 1) * elem_size);
     if (!header)
       return NULL;
     header->capacity = cap;
@@ -241,8 +235,8 @@ void* _gr_da_append(void** arr, size_t elem_size, void* val) {
   _gr_da_header* header = GR_DA_HEADER(*arr);
   if (header->count == header->capacity) {
     size_t new_cap = header->capacity * 2;
-    header = (_gr_da_header*)realloc(header, sizeof(_gr_da_header) +
-                                                 (new_cap - 1) * elem_size);
+    header = (_gr_da_header*)gr_realloc(header, sizeof(_gr_da_header) +
+                                                    (new_cap - 1) * elem_size);
     if (!header)
       return NULL;
     header->capacity = new_cap;
@@ -257,7 +251,7 @@ void* _gr_da_append(void** arr, size_t elem_size, void* val) {
 
 void _gr_da_free(void** arr) {
   if (arr && *arr) {
-    free(GR_DA_HEADER(*arr));
+    gr_free(GR_DA_HEADER(*arr));
     *arr = NULL;
   }
 }

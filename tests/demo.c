@@ -9,7 +9,7 @@ const char* str2 = "a gr.h demo";
 int main(void) {
   printf("gr.h demo\n");
 
-  printf("gr_str_view\n");
+  printf("\ngr_str_view\n");
 
   gr_str_view_t gr_h_1 = (gr_str_view_t){
       .p = str1,
@@ -22,8 +22,8 @@ int main(void) {
 
   printf("str_view_eq (expect 1): %d\n", gr_str_view_eq(gr_h_1, gr_h_2));
 
-  printf("gr_da\n");
-  i8* arr = NULL;
+  printf("\ngr_da\n");
+  int32_t* arr = NULL;
 
   for (int i = 0; i < 10; ++i) {
     gr_da_append(arr, i * 10);
