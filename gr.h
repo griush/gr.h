@@ -4,15 +4,9 @@
 /*
  * commonly used includes
  */
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
-
-/*
- * used includes for data structures
- */
-#include <stdlib.h>
-#include <string.h>
 
 /*
  * define cstd
@@ -24,156 +18,155 @@
 #define GR_CSTD_89 198901L
 
 #ifdef __STDC_VERSION__
-  #define GR_CSTD __STDC_VERSION__
+#define GR_CSTD __STDC_VERSION__
 #else
-  #define GR_CSTD 1L
+#define GR_CSTD 1L
 #endif
 
 /*
  * define compiler
  */
 #if defined(__clang__)
-  #define GR_COMPILER_CLANG 1
+#define GR_COMPILER_CLANG 1
 #elif defined(__GNUC__) || defined(__GNUG__)
-  #define GR_COMPILER_GCC 1
+#define GR_COMPILER_GCC 1
 #elif defined(_MSC_VER)
-  #define GR_COMPILER_MSVC 1
+#define GR_COMPILER_MSVC 1
 #elif defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
-  #define GR_COMPILER_INTEL 1
+#define GR_COMPILER_INTEL 1
 #elif defined(__TINYC__)
-  #define GR_COMPILER_TINYC 1
+#define GR_COMPILER_TINYC 1
 #else
-  #define GR_COMPILER_UNKNOWN 1
+#define GR_COMPILER_UNKNOWN 1
 #endif
 
 #if defined(_WIN32) && !defined(__MINGW32__)
-  #ifndef _CRT_SECURE_NO_WARNINGS
-    #define _CRT_SECURE_NO_WARNINGS
-  #endif
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 #endif
 
 #ifndef GR_STATIC_ASSERT
-  #if GR_CSTD >= GR_CSTD_11
-    #define GR_STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)
-  #else
-    #define GR_STATIC_ASSERT(cond, msg)
-  #endif
+#if GR_CSTD >= GR_CSTD_11
+#define GR_STATIC_ASSERT(cond, msg) _Static_assert (cond, msg)
+#else
+#define GR_STATIC_ASSERT(cond, msg)
+#endif
 #endif
 
 #ifndef GR_DEBUG_TRAP
-  #if GR_COMPILER_MSVC
-    #if _MSC_VER < 1300
-      #define GR_DEBUG_TRAP() __asm int 3 /* Trap to debugger! */
-    #else
-      #define GR_DEBUG_TRAP() __debugbreak()
-    #endif
-  #else
-    #define GR_DEBUG_TRAP() __builtin_trap()
-  #endif
+#if GR_COMPILER_MSVC
+#if _MSC_VER < 1300
+#define GR_DEBUG_TRAP() __asm int 3 /* Trap to debugger! */
+#else
+#define GR_DEBUG_TRAP() __debugbreak ()
+#endif
+#else
+#define GR_DEBUG_TRAP() __builtin_trap ()
+#endif
 #endif
 
 /*
  * define auto properly
  */
 #if GR_CSTD >= GR_CSTD_23
-  // C23 or later
-  // auto is native
+// C23 or later
+// auto is native
 #elif GR_COMPILER_GCC || GR_COMPILER_CLANG
-  #define auto __auto_type
+#define auto __auto_type
 #else
-  #error "This compiler does not support auto-style type inference"
+#error "This compiler does not support auto-style type inference"
 #endif
 
 /*
  * other helpers
  */
-#ifndef GR_BIT
-  #define GR_BIT(x) (1 << (x))
+#ifndef gr_bit
+#define gr_bit(x) (1 << (x))
 #endif
 
 #ifndef gr_min
-  #define gr_min(a, b) ((a) < (b) ? (a) : (b))
+#define gr_min(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
 #ifndef gr_max
-  #define gr_max(a, b) ((a) > (b) ? (a) : (b))
+#define gr_max(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
 #ifndef gr_min3
-  #define gr_min3(a, b, c) gr_min(gr_min(a, b), c)
+#define gr_min3(a, b, c) gr_min (gr_min (a, b), c)
 #endif
 
 #ifndef gr_max3
-  #define gr_max3(a, b, c) gr_max(gr_max(a, b), c)
+#define gr_max3(a, b, c) gr_max (gr_max (a, b), c)
 #endif
 
 #ifndef gr_clamp
-  #define gr_clamp(x, lower, upper) gr_min(gr_max((x), (lower)), (upper))
+#define gr_clamp(x, lower, upper) gr_min (gr_max ((x), (lower)), (upper))
 #endif
 
 #ifndef gr_clamp01
-  #define gr_clamp01(x) gr_clamp((x), 0, 1)
+#define gr_clamp01(x) gr_clamp ((x), 0, 1)
 #endif
 
 #ifndef gr_is_between
-  #define gr_is_between(x, lower, upper) (((lower) <= (x)) && ((x) <= (upper)))
+#define gr_is_between(x, lower, upper) (((lower) <= (x)) && ((x) <= (upper)))
 #endif
 
 #ifndef gr_abs
-  #define gr_abs(x) ((x) < 0 ? -(x) : (x))
+#define gr_abs(x) ((x) < 0 ? -(x) : (x))
 #endif
 
 #ifndef gr_kilobytes
-  #define gr_kilobytes(x) ((x) * (i64)(1024))
-  #define gr_megabytes(x) (gr_kilobytes(x) * (i64)(1024))
-  #define gr_gigabytes(x) (gr_megabytes(x) * (i64)(1024))
-  #define gr_terabytes(x) (gr_gigabytes(x) * (i64)(1024))
+#define gr_kilobytes(x) ((x) * (i64)(1024))
+#define gr_megabytes(x) (gr_kilobytes (x) * (i64)(1024))
+#define gr_gigabytes(x) (gr_megabytes (x) * (i64)(1024))
+#define gr_terabytes(x) (gr_gigabytes (x) * (i64)(1024))
 #endif
 
 /*
  * override allocator
  */
 #ifndef gr_malloc
-  #define gr_malloc malloc
+#define gr_malloc malloc
 #endif
 
 #ifndef gr_realloc
-  #define gr_realloc realloc
+#define gr_realloc realloc
 #endif
 
 #ifndef gr_free
-  #define gr_free free
+#define gr_free free
 #endif
 
 /*
  * str_view
  */
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct {
-  const char* p;
-  size_t len;
-} gr_str_view_t;
+  typedef struct
+  {
+    const char *p;
+    size_t len;
+  } gr_str_view_t;
 
-static inline gr_str_view_t gr_str_view_empty() {
-  return (gr_str_view_t){
-      .p = NULL,
-      .len = 0,
-  };
-}
+  /*
+   * creates empty str_view
+   */
+  gr_str_view_t gr_str_view_empty ();
 
-static inline gr_str_view_t gr_str_view_from_cstr(const char* str) {
-  return (gr_str_view_t){
-      .p = str,
-      .len = strlen(str),
-  };
-}
+  /*
+   * creates str_view from a cstr
+   */
+  gr_str_view_t gr_str_view_from_cstr (const char *str);
 
-static inline bool gr_str_view_eq(gr_str_view_t a, gr_str_view_t b) {
-  return a.len == b.len && memcmp(a.p, b.p, a.len) == 0;
-}
+  /*
+   * tests two str_view for the same len and data
+   */
+  bool gr_str_view_eq (gr_str_view_t a, gr_str_view_t b);
 
 #ifdef __cplusplus
 }
@@ -182,90 +175,32 @@ static inline bool gr_str_view_eq(gr_str_view_t a, gr_str_view_t b) {
 /*
  * da (dynamic array)
  */
-#define gr_da_append(arr, val)                                                 \
-  do {                                                                         \
-    auto _tmp = (val);                                                         \
-    _gr_da_append((void**)&(arr), sizeof(*(arr)), &_tmp);                      \
-  } while (0)
-#define gr_da_free(arr) _gr_da_free((void**)&(arr))
-#define gr_da_count(arr) _gr_da_count(arr)
-#define gr_da_capacity(arr) _gr_da_capacity(arr)
+#define gr_da_append(arr, val)                                                \
+  do                                                                          \
+    {                                                                         \
+      auto _tmp = (val);                                                      \
+      _gr_da_append ((void **)&(arr), sizeof (*(arr)), &_tmp);                \
+    }                                                                         \
+  while (0)
+#define gr_da_free(arr) _gr_da_free ((void **)&(arr))
+#define gr_da_count(arr) _gr_da_count (arr)
+#define gr_da_capacity(arr) _gr_da_capacity (arr)
+#define gr_da_swap_remove(arr, i)                                             \
+  _gr_da_swap_remove ((arr), sizeof (*(arr)), (i))
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void* _gr_da_append(void** arr, size_t elem_size, void* val);
-void _gr_da_free(void** arr);
-size_t _gr_da_count(void* arr);
-size_t _gr_da_capacity(void* arr);
+  void *_gr_da_append (void **arr, size_t elem_size, void *val);
+  void _gr_da_free (void **arr);
+  size_t _gr_da_count (void *arr);
+  size_t _gr_da_capacity (void *arr);
+  void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif // !GR_H
-
-#ifdef GR_IMPL
-
-/*
- * da (dynamic array)
- */
-typedef struct {
-  size_t capacity;
-  size_t count;
-  char data[1]; // flexible array member trick
-} _gr_da_header;
-
-#define GR_DA_HEADER(ptr)                                                      \
-  ((_gr_da_header*)((char*)(ptr) - offsetof(_gr_da_header, data)))
-
-void* _gr_da_append(void** arr, size_t elem_size, void* val) {
-  if (*arr == NULL) {
-    size_t cap = 4;
-    _gr_da_header* header = (_gr_da_header*)gr_malloc(sizeof(_gr_da_header) +
-                                                      (cap - 1) * elem_size);
-    if (!header)
-      return NULL;
-    header->capacity = cap;
-    header->count = 0;
-    *arr = header->data;
-  }
-
-  _gr_da_header* header = GR_DA_HEADER(*arr);
-  if (header->count == header->capacity) {
-    size_t new_cap = header->capacity * 2;
-    header = (_gr_da_header*)gr_realloc(header, sizeof(_gr_da_header) +
-                                                    (new_cap - 1) * elem_size);
-    if (!header)
-      return NULL;
-    header->capacity = new_cap;
-    *arr = header->data;
-  }
-
-  void* dest = header->data + elem_size * header->count;
-  memcpy(dest, val, elem_size);
-  header->count++;
-  return *arr;
-}
-
-void _gr_da_free(void** arr) {
-  if (arr && *arr) {
-    gr_free(GR_DA_HEADER(*arr));
-    *arr = NULL;
-  }
-}
-
-size_t _gr_da_count(void* arr) {
-  if (!arr)
-    return 0;
-  return GR_DA_HEADER(arr)->count;
-}
-
-size_t _gr_da_capacity(void* arr) {
-  if (!arr)
-    return 0;
-  return GR_DA_HEADER(arr)->capacity;
-}
-
-#endif // GR_IMPL

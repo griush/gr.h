@@ -1,5 +1,1 @@
-BasedOnStyle            : LLVM
-IndentPPDirectives      : BeforeHash
-IndentWidth             : '2'
-PointerAlignment        : Left
-SortIncludes            : 'false'
+BasedOnStyle: GNU
