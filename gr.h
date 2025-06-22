@@ -8,6 +8,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <stdio.h>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 /*
  * define cstd
  */
@@ -57,7 +64,7 @@
 #ifndef GR_DEBUG_TRAP
 #if GR_COMPILER_MSVC
 #if _MSC_VER < 1300
-#define GR_DEBUG_TRAP() __asm int 3 /* Trap to debugger! */
+#define GR_DEBUG_TRAP() __asm int 3
 #else
 #define GR_DEBUG_TRAP() __debugbreak ()
 #endif
@@ -140,12 +147,21 @@
 #endif
 
 /*
- * str_view
+ * log
  */
-#ifdef __cplusplus
-extern "C"
-{
+#ifdef GR_DEBUG
+/*
+ * must define GR_DEBUG before using
+ */
+#define gr_log(fmt, ...)                                                      \
+  fprintf (stderr, "[%s:%d] " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#else
+#define gr_log(fmt, ...)
 #endif
+
+  /*
+   * str_view
+   */
 
   typedef struct
   {
@@ -168,9 +184,12 @@ extern "C"
    */
   bool gr_str_view_eq (gr_str_view_t a, gr_str_view_t b);
 
-#ifdef __cplusplus
-}
-#endif
+  /*
+   * creates a string view substr
+   * returns gr_str_view_empty () on failure
+   */
+  gr_str_view_t gr_str_view_substr (gr_str_view_t str, size_t start,
+                                    size_t len);
 
 /*
  * da (dynamic array)
@@ -187,17 +206,18 @@ extern "C"
 #define gr_da_capacity(arr) _gr_da_capacity (arr)
 #define gr_da_swap_remove(arr, i)                                             \
   _gr_da_swap_remove ((arr), sizeof (*(arr)), (i))
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+#define gr_da_clear(arr) _gr_da_clear (arr)
 
   void *_gr_da_append (void **arr, size_t elem_size, void *val);
   void _gr_da_free (void **arr);
   size_t _gr_da_count (void *arr);
   size_t _gr_da_capacity (void *arr);
   void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
+  void _gr_da_clear (void *arr);
+
+  /*
+   * math
+   */
 
 #ifdef __cplusplus
 }

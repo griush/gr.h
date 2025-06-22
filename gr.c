@@ -31,6 +31,23 @@ gr_str_view_eq (gr_str_view_t a, gr_str_view_t b)
   return a.len == b.len && memcmp (a.p, b.p, a.len) == 0;
 }
 
+gr_str_view_t
+gr_str_view_substr (gr_str_view_t str, size_t start, size_t len)
+{
+  if (str.p == NULL || str.len == 0 || start >= str.len)
+    {
+      return gr_str_view_empty ();
+    }
+
+  size_t available = str.len - start;
+  if (len > available)
+    {
+      len = available;
+    }
+
+  return (gr_str_view_t){ .len = len, .p = str.p + start };
+}
+
 /*
  * da (dynamic array)
  */
@@ -117,4 +134,10 @@ _gr_da_swap_remove (void *arr, size_t elem_size, size_t i)
           elem_size);
 
   h->count -= 1;
+}
+
+void
+_gr_da_clear (void *arr)
+{
+  GR_DA_HEADER (arr)->count = 0;
 }
