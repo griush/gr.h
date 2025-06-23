@@ -125,10 +125,10 @@ extern "C"
 #endif
 
 #ifndef gr_kilobytes
-#define gr_kilobytes(x) ((x) * (i64)(1024))
-#define gr_megabytes(x) (gr_kilobytes (x) * (i64)(1024))
-#define gr_gigabytes(x) (gr_megabytes (x) * (i64)(1024))
-#define gr_terabytes(x) (gr_gigabytes (x) * (i64)(1024))
+#define gr_kilobytes(x) ((x) * (size_t)(1024))
+#define gr_megabytes(x) (gr_kilobytes (x) * (size_t)(1024))
+#define gr_gigabytes(x) (gr_megabytes (x) * (size_t)(1024))
+#define gr_terabytes(x) (gr_gigabytes (x) * (size_t)(1024))
 #endif
 
 /*
@@ -160,9 +160,29 @@ extern "C"
 #endif
 
   /*
+   * arena
+   */
+  typedef struct
+  {
+    void *p;
+
+    /* index of next allocation */
+    size_t next;
+
+    /* size in bytes */
+    size_t size;
+  } gr_arena_t;
+
+  gr_arena_t gr_arena_create (size_t bytes);
+  void *gr_arena_alloc (gr_arena_t *arena, size_t bytes);
+  void gr_arena_reset (gr_arena_t *arena);
+
+  size_t gr_arena_used (gr_arena_t *arena);
+  size_t gr_arena_avail (gr_arena_t *arena);
+
+  /*
    * str_view
    */
-
   typedef struct
   {
     const char *p;

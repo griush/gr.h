@@ -1,7 +1,65 @@
 #include "gr.h"
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+
+/*
+ * arena
+ */
+gr_arena_t
+gr_arena_create (size_t bytes)
+{
+  gr_arena_t r = (gr_arena_t){
+    .p = NULL,
+    .size = 0,
+    .next = 0,
+  };
+
+  void *d = gr_malloc (bytes);
+  if (d == NULL)
+    {
+      return r; // NULL arena
+    }
+
+  r.p = d;
+  r.size = bytes;
+  return r;
+}
+
+void *
+gr_arena_alloc (gr_arena_t *arena, size_t bytes)
+{
+  size_t avail = arena->size - arena->next;
+  if (avail < bytes)
+    {
+      return NULL;
+    }
+
+  void *r = arena->p + arena->next;
+  arena->next += bytes;
+  return r;
+}
+
+void
+gr_arena_reset (gr_arena_t *arena)
+{
+  free (arena->p);
+  arena->size = 0;
+  arena->next = 0;
+}
+
+size_t
+gr_arena_used (gr_arena_t *arena)
+{
+  return arena->next;
+}
+
+size_t
+gr_arena_avail (gr_arena_t *arena)
+{
+  return arena->size - arena->next;
+}
 
 /*
  * str_view
