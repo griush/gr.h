@@ -51,4 +51,10 @@ main (void)
     }
 
   gr_da_free (arr);
+
+  // math
+  gr_log ("math");
+
+  float f = gr_lerp (0.0, 1.0, 0.5);
+  printf("%f\n", f);
 }

@@ -215,9 +215,10 @@ extern "C"
   void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
   void _gr_da_clear (void *arr);
 
-  /*
-   * math
-   */
+/*
+ * math
+ */
+#define gr_lerp(a, b, t) (a + (b - a) * t)
 
 #ifdef __cplusplus
 }
