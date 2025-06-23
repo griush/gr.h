@@ -179,6 +179,20 @@ _gr_da_capacity (void *arr)
 }
 
 void
+_gr_da_remove (void *arr, size_t elem_size, size_t i)
+{
+  if (!arr)
+    return;
+
+  _gr_da_header *h = GR_DA_HEADER (arr);
+
+  memmove (arr + i * elem_size, arr + (i + 1) * elem_size,
+           (h->count - i - 1) * elem_size);
+
+  h->count -= 1;
+}
+
+void
 _gr_da_swap_remove (void *arr, size_t elem_size, size_t i)
 {
   if (!arr)
@@ -197,5 +211,8 @@ _gr_da_swap_remove (void *arr, size_t elem_size, size_t i)
 void
 _gr_da_clear (void *arr)
 {
+  if (!arr)
+    return;
+
   GR_DA_HEADER (arr)->count = 0;
 }

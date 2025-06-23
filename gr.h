@@ -224,6 +224,7 @@ extern "C"
 #define gr_da_free(arr) _gr_da_free ((void **)&(arr))
 #define gr_da_count(arr) _gr_da_count (arr)
 #define gr_da_capacity(arr) _gr_da_capacity (arr)
+#define gr_da_remove(arr, i) _gr_da_remove ((arr), sizeof (*(arr)), (i))
 #define gr_da_swap_remove(arr, i)                                             \
   _gr_da_swap_remove ((arr), sizeof (*(arr)), (i))
 #define gr_da_clear(arr) _gr_da_clear (arr)
@@ -232,6 +233,7 @@ extern "C"
   void _gr_da_free (void **arr);
   size_t _gr_da_count (void *arr);
   size_t _gr_da_capacity (void *arr);
+  void _gr_da_remove (void *arr, size_t elem_size, size_t i);
   void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
   void _gr_da_clear (void *arr);
 
