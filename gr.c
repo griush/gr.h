@@ -43,7 +43,7 @@ gr_arena_alloc (gr_arena_t *arena, size_t bytes)
 void
 gr_arena_reset (gr_arena_t *arena)
 {
-  free (arena->p);
+  gr_free (arena->p);
   arena->size = 0;
   arena->next = 0;
 }
