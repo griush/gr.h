@@ -54,12 +54,20 @@ extern "C"
 #endif
 
 #ifndef GR_STATIC_ASSERT
-#if GR_CSTD >= GR_CSTD_11
+#if defined(__cplusplus)
+#if __cplusplus >= 201103L
+#define GR_STATIC_ASSERT(cond, msg) static_assert (cond, msg)
+#else
+#define GR_STATIC_ASSERT(cond, msg)                                              \
+  typedef char static_assertion_failed[(cond) ? 1 : -1]
+#endif // __cplusplus >= 201103L
+#elif GR_CSTD >= GR_CSTD_11
 #define GR_STATIC_ASSERT(cond, msg) _Static_assert (cond, msg)
 #else
-#define GR_STATIC_ASSERT(cond, msg)
-#endif
-#endif
+#define GR_STATIC_ASSERT(cond, msg)                                              \
+  typedef char static_assertion_failed[(cond) ? 1 : -1]
+#endif // defined(__cplusplus)
+#endif // !STATIC_ASSERT
 
 #ifndef GR_DEBUG_TRAP
 #if GR_COMPILER_MSVC
@@ -181,34 +189,34 @@ extern "C"
   size_t gr_arena_avail (gr_arena_t *arena);
 
   /*
-   * str_view
+   * str
    */
   typedef struct
   {
     const char *p;
     size_t len;
-  } gr_str_view_t;
+  } gr_str_t;
 
   /*
    * creates empty str_view
    */
-  gr_str_view_t gr_str_view_empty ();
+  gr_str_t gr_str_empty ();
 
   /*
    * creates str_view from a cstr
    */
-  gr_str_view_t gr_str_view_from_cstr (const char *str);
+  gr_str_t gr_str_from_cstr (const char *str);
 
   /*
    * tests two str_view for the same len and data
    */
-  bool gr_str_view_eq (gr_str_view_t a, gr_str_view_t b);
+  bool gr_str_eq (gr_str_t a, gr_str_t b);
 
   /*
    * creates a string view substr
    * returns gr_str_view_empty () on failure
    */
-  gr_str_view_t gr_str_view_substr (gr_str_view_t str, size_t start,
+  gr_str_t gr_str_substr (gr_str_t str, size_t start,
                                     size_t len);
 
 /*

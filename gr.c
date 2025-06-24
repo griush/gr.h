@@ -65,36 +65,36 @@ gr_arena_avail (gr_arena_t *arena)
  * str_view
  */
 
-gr_str_view_t
-gr_str_view_empty ()
+gr_str_t
+gr_str_empty ()
 {
-  return (gr_str_view_t){
+  return (gr_str_t){
     .p = NULL,
     .len = 0,
   };
 }
 
-gr_str_view_t
-gr_str_view_from_cstr (const char *str)
+gr_str_t
+gr_str_from_cstr (const char *str)
 {
-  return (gr_str_view_t){
+  return (gr_str_t){
     .p = str,
     .len = strlen (str),
   };
 }
 
 bool
-gr_str_view_eq (gr_str_view_t a, gr_str_view_t b)
+gr_str_eq (gr_str_t a, gr_str_t b)
 {
   return a.len == b.len && memcmp (a.p, b.p, a.len) == 0;
 }
 
-gr_str_view_t
-gr_str_view_substr (gr_str_view_t str, size_t start, size_t len)
+gr_str_t
+gr_str_substr (gr_str_t str, size_t start, size_t len)
 {
   if (str.p == NULL || str.len == 0 || start >= str.len)
     {
-      return gr_str_view_empty ();
+      return gr_str_empty ();
     }
 
   size_t available = str.len - start;
@@ -103,7 +103,7 @@ gr_str_view_substr (gr_str_view_t str, size_t start, size_t len)
       len = available;
     }
 
-  return (gr_str_view_t){ .len = len, .p = str.p + start };
+  return (gr_str_t){ .len = len, .p = str.p + start };
 }
 
 /*

@@ -24,15 +24,15 @@ main (void)
   // str view
   gr_log ("gr_str_view");
 
-  gr_str_view_t str_1 = gr_str_view_from_cstr ("gr.h demo app");
-  gr_str_view_t str_2 = gr_str_view_from_cstr ("a demo for gr.h library");
+  gr_str_t str_1 = gr_str_from_cstr ("gr.h demo app");
+  gr_str_t str_2 = gr_str_from_cstr ("a demo for gr.h library");
 
-  gr_str_view_t gr_h_1 = gr_str_view_substr (str_1, 0, 4);
-  gr_str_view_t gr_h_2 = gr_str_view_substr (str_2, 11, 4);
+  gr_str_t gr_h_1 = gr_str_substr (str_1, 0, 4);
+  gr_str_t gr_h_2 = gr_str_substr (str_2, 11, 4);
 
   gr_log ("gr_h_1: %.*s", (int32_t)gr_h_1.len, gr_h_1.p);
   gr_log ("gr_h_2: %.*s", (int32_t)gr_h_2.len, gr_h_2.p);
-  gr_log ("str_view_eq (expect 1): %d", gr_str_view_eq (gr_h_1, gr_h_2));
+  gr_log ("str_view_eq (expect 1): %d", gr_str_eq (gr_h_1, gr_h_2));
 
   // dynamic array
   gr_log ("gr_da");
