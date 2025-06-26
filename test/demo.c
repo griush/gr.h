@@ -1,4 +1,3 @@
-#include <stdint.h>
 #define GR_DEBUG
 #include "../gr.h"
 

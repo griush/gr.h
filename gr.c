@@ -185,6 +185,9 @@ _gr_da_remove (void *arr, size_t elem_size, size_t i)
 
   _gr_da_header *h = GR_DA_HEADER (arr);
 
+  if (i >= h->count)
+    return;
+
   memmove (arr + i * elem_size, arr + (i + 1) * elem_size,
            (h->count - i - 1) * elem_size);
 
@@ -198,6 +201,9 @@ _gr_da_swap_remove (void *arr, size_t elem_size, size_t i)
     return;
 
   _gr_da_header *h = GR_DA_HEADER (arr);
+
+  if (i < h->count)
+    return;
 
   char *bytes = (char *)arr;
 
@@ -214,6 +220,76 @@ _gr_da_clear (void *arr)
     return;
 
   GR_DA_HEADER (arr)->count = 0;
+}
+
+/*
+ * test
+ */
+void
+gr_test_case_run (gr_test_case_t test_case)
+{
+  fprintf (stderr, "running test %.*s\n", (int)test_case.name.len, test_case.name.p);
+
+  gr_test_result_t result = test_case.func();
+
+  if (result == GR_TEST_PASSED)
+    {
+      fprintf (stderr, "passed\n");
+    }
+  else
+    {
+      fprintf (stderr, "failed\n");
+    }
+}
+
+void
+gr_test_case_run_suite (gr_str_t suite_name, gr_test_case_t *tests, uint32_t count)
+{
+  fprintf (stderr, "==== running %.*s ====\n", (int)suite_name.len, suite_name.p);
+
+  for (uint32_t i = 0; i < count; i++)
+    {
+      gr_test_case_run (tests[i]);
+    }
+}
+
+gr_test_result_t
+gr_test_expect (bool condition)
+{
+  if (condition)
+    {
+      return GR_TEST_PASSED;
+    }
+  else
+    {
+      return GR_TEST_FAILED;
+    }
+}
+
+gr_test_result_t
+gr_test_expect_eqli (int32_t expected, int32_t actual)
+{
+  if (expected == actual)
+    {
+      return GR_TEST_PASSED;
+    }
+  else
+    {
+      return GR_TEST_FAILED;
+    }
+}
+
+gr_test_result_t
+gr_test_expect_eqlf (float expected, float actual, float tolerance)
+{
+  if (gr_abs (expected - actual) <= gr_abs(tolerance))
+    {
+      return GR_TEST_PASSED;
+    }
+  else
+    {
+      return GR_TEST_FAILED;
+    }
 }
 
 /*

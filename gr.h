@@ -206,7 +206,7 @@ bool gr_str_eq (gr_str_t a, gr_str_t b);
 
 /*
  * creates a string view substr
- * returns gr_str_view_empty () on failure
+  * returns gr_str_view_empty () on failure
  */
 gr_str_t gr_str_substr (gr_str_t str, size_t start, size_t len);
 
@@ -235,6 +235,29 @@ size_t _gr_da_capacity (void *arr);
 void _gr_da_remove (void *arr, size_t elem_size, size_t i);
 void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
 void _gr_da_clear (void *arr);
+
+/*
+ * test
+ */
+typedef enum
+{
+  GR_TEST_PASSED,
+  GR_TEST_FAILED,
+} gr_test_result_t;
+
+typedef gr_test_result_t (*test_func_t)(void);
+
+typedef struct {
+    gr_str_t name;
+    test_func_t func;
+} gr_test_case_t;
+
+void gr_test_case_run (gr_test_case_t test_case);
+void gr_test_case_run_suite (gr_str_t suite_name, gr_test_case_t *tests, uint32_t count);
+
+gr_test_result_t gr_test_expect (bool condition);
+gr_test_result_t gr_test_expect_eqli (int32_t expected, int32_t actual);
+gr_test_result_t gr_test_expect_eqlf (float expected, float actual, float tolerance);
 
 /*
  * math
