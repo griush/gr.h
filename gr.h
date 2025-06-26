@@ -25,6 +25,10 @@
 #define GR_CSTD 1L
 #endif
 
+#if GR_CSTD < GR_CSTD_99
+#error "at least C99 is required"
+#endif
+
 /*
  * define compiler
  */

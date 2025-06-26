@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror -O2
+CFLAGS := -Wall -Wextra -Werror -O2 -std=c99
 AR := ar
 ARFLAGS := rcs
 
