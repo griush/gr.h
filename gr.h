@@ -202,7 +202,7 @@ gr_str_t gr_str_from_cstr (const char *str);
 /*
  * tests two str_view for the same len and data
  */
-bool gr_str_eq (gr_str_t a, gr_str_t b);
+bool     gr_str_eq (gr_str_t a, gr_str_t b);
 
 /*
  * creates a string view substr
@@ -228,13 +228,14 @@ gr_str_t gr_str_substr (gr_str_t str, size_t start, size_t len);
   _gr_da_swap_remove ((arr), sizeof (*(arr)), (i))
 #define gr_da_clear(arr) _gr_da_clear (arr)
 
-void *_gr_da_append (void **arr, size_t elem_size, void *val);
-void _gr_da_free (void **arr);
-size_t _gr_da_count (void *arr);
-size_t _gr_da_capacity (void *arr);
-void _gr_da_remove (void *arr, size_t elem_size, size_t i);
-void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
-void _gr_da_clear (void *arr);
+/* returns NULL if failed */
+void   *_gr_da_append (void **arr, size_t elem_size, void *val);
+void    _gr_da_free (void **arr);
+size_t  _gr_da_count (void *arr);
+size_t  _gr_da_capacity (void *arr);
+void    _gr_da_remove (void *arr, size_t elem_size, size_t i);
+void    _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
+void    _gr_da_clear (void *arr);
 
 /*
  * test
@@ -281,12 +282,12 @@ gr_vector_2f_t gr_vector_2f_zero ();
 gr_vector_2f_t gr_vector_2f_add (gr_vector_2f_t va, gr_vector_2f_t vb);
 gr_vector_2f_t gr_vector_2f_sub (gr_vector_2f_t va, gr_vector_2f_t vb);
 gr_vector_2f_t gr_vector_2f_scale (gr_vector_2f_t va, float scalar);
-float gr_vector_2f_dot (gr_vector_2f_t va, gr_vector_2f_t vb);
+float          gr_vector_2f_dot (gr_vector_2f_t va, gr_vector_2f_t vb);
 
 gr_vector_3f_t gr_vector_3f_zero ();
 gr_vector_3f_t gr_vector_3f_add (gr_vector_3f_t va, gr_vector_3f_t vb);
 gr_vector_3f_t gr_vector_3f_sub (gr_vector_3f_t va, gr_vector_3f_t vb);
 gr_vector_3f_t gr_vector_3f_scale (gr_vector_3f_t va, float scalar);
-float gr_vector_3f_dot (gr_vector_3f_t va, gr_vector_3f_t vb);
+float          gr_vector_3f_dot (gr_vector_3f_t va, gr_vector_3f_t vb);
 
 #endif // !GR_H
