@@ -10,11 +10,6 @@
 
 #include <stdio.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 /*
  * define cstd
  */
@@ -54,19 +49,12 @@ extern "C"
 #endif
 
 #ifndef GR_STATIC_ASSERT
-#if defined(__cplusplus)
-#if __cplusplus >= 201103L
-#define GR_STATIC_ASSERT(cond, msg) static_assert (cond, msg)
-#else
-#define GR_STATIC_ASSERT(cond, msg)                                              \
-  typedef char static_assertion_failed[(cond) ? 1 : -1]
-#endif // __cplusplus >= 201103L
-#elif GR_CSTD >= GR_CSTD_11
+#if GR_CSTD >= GR_CSTD_11
 #define GR_STATIC_ASSERT(cond, msg) _Static_assert (cond, msg)
 #else
-#define GR_STATIC_ASSERT(cond, msg)                                              \
+#define GR_STATIC_ASSERT(cond, msg)                                           \
   typedef char static_assertion_failed[(cond) ? 1 : -1]
-#endif // defined(__cplusplus)
+#endif // GR_CSTD >= GR_CSTD_11
 #endif // !STATIC_ASSERT
 
 #ifndef GR_DEBUG_TRAP
@@ -167,57 +155,56 @@ extern "C"
 #define gr_log(fmt, ...)
 #endif
 
-  /*
-   * arena
-   */
-  typedef struct
-  {
-    void *p;
+/*
+ * arena
+ */
+typedef struct
+{
+  void *p;
 
-    /* index of next allocation */
-    size_t next;
+  /* index of next allocation */
+  size_t next;
 
-    /* size in bytes */
-    size_t size;
-  } gr_arena_t;
+  /* size in bytes */
+  size_t size;
+} gr_arena_t;
 
-  gr_arena_t gr_arena_create (size_t bytes);
-  void *gr_arena_alloc (gr_arena_t *arena, size_t bytes);
-  void gr_arena_reset (gr_arena_t *arena);
+gr_arena_t gr_arena_create (size_t bytes);
+void *gr_arena_alloc (gr_arena_t *arena, size_t bytes);
+void gr_arena_reset (gr_arena_t *arena);
 
-  size_t gr_arena_used (gr_arena_t *arena);
-  size_t gr_arena_avail (gr_arena_t *arena);
+size_t gr_arena_used (gr_arena_t *arena);
+size_t gr_arena_avail (gr_arena_t *arena);
 
-  /*
-   * str
-   */
-  typedef struct
-  {
-    const char *p;
-    size_t len;
-  } gr_str_t;
+/*
+ * str
+ */
+typedef struct
+{
+  const char *p;
+  size_t len;
+} gr_str_t;
 
-  /*
-   * creates empty str_view
-   */
-  gr_str_t gr_str_empty ();
+/*
+ * creates empty str_view
+ */
+gr_str_t gr_str_empty ();
 
-  /*
-   * creates str_view from a cstr
-   */
-  gr_str_t gr_str_from_cstr (const char *str);
+/*
+ * creates str_view from a cstr
+ */
+gr_str_t gr_str_from_cstr (const char *str);
 
-  /*
-   * tests two str_view for the same len and data
-   */
-  bool gr_str_eq (gr_str_t a, gr_str_t b);
+/*
+ * tests two str_view for the same len and data
+ */
+bool gr_str_eq (gr_str_t a, gr_str_t b);
 
-  /*
-   * creates a string view substr
-   * returns gr_str_view_empty () on failure
-   */
-  gr_str_t gr_str_substr (gr_str_t str, size_t start,
-                                    size_t len);
+/*
+ * creates a string view substr
+ * returns gr_str_view_empty () on failure
+ */
+gr_str_t gr_str_substr (gr_str_t str, size_t start, size_t len);
 
 /*
  * da (dynamic array)
@@ -237,21 +224,17 @@ extern "C"
   _gr_da_swap_remove ((arr), sizeof (*(arr)), (i))
 #define gr_da_clear(arr) _gr_da_clear (arr)
 
-  void *_gr_da_append (void **arr, size_t elem_size, void *val);
-  void _gr_da_free (void **arr);
-  size_t _gr_da_count (void *arr);
-  size_t _gr_da_capacity (void *arr);
-  void _gr_da_remove (void *arr, size_t elem_size, size_t i);
-  void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
-  void _gr_da_clear (void *arr);
+void *_gr_da_append (void **arr, size_t elem_size, void *val);
+void _gr_da_free (void **arr);
+size_t _gr_da_count (void *arr);
+size_t _gr_da_capacity (void *arr);
+void _gr_da_remove (void *arr, size_t elem_size, size_t i);
+void _gr_da_swap_remove (void *arr, size_t elem_size, size_t i);
+void _gr_da_clear (void *arr);
 
 /*
  * math
  */
 #define gr_lerp(a, b, t) (a + (b - a) * t)
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // !GR_H
