@@ -215,3 +215,84 @@ _gr_da_clear (void *arr)
 
   GR_DA_HEADER (arr)->count = 0;
 }
+
+/*
+ * math
+ */
+gr_vector_2f_t
+gr_vector_2f_zero ()
+{
+  return (gr_vector_2f_t){
+    .x = 0.0f,
+    .y = 0.0f,
+  };
+}
+
+gr_vector_2f_t
+gr_vector_2f_add (gr_vector_2f_t va, gr_vector_2f_t vb)
+{
+  return (gr_vector_2f_t){
+    .x = va.x + vb.x,
+    .y = va.y + vb.y,
+  };
+}
+
+gr_vector_2f_t
+gr_vector_2f_sub (gr_vector_2f_t va, gr_vector_2f_t vb)
+{
+  return (gr_vector_2f_t){
+    .x = va.x - vb.x,
+    .y = va.y - vb.y,
+  };
+}
+
+gr_vector_2f_t
+gr_vector_2f_scale (gr_vector_2f_t va, float scalar)
+{
+  return (gr_vector_2f_t){
+    .x = va.x * scalar,
+    .y = va.y * scalar,
+  };
+}
+
+float
+gr_vector_2f_dot (gr_vector_2f_t va, gr_vector_2f_t vb)
+{
+  return va.x * vb.x + va.y * vb.y;
+}
+
+gr_vector_3f_t
+gr_vector_3f_add (gr_vector_3f_t va, gr_vector_3f_t vb)
+{
+  return (gr_vector_3f_t){
+    .x = va.x + vb.x,
+    .y = va.y + vb.y,
+    .z = va.z + vb.z,
+  };
+}
+
+gr_vector_3f_t
+gr_vector_3f_sub (gr_vector_3f_t va, gr_vector_3f_t vb)
+{
+  return (gr_vector_3f_t){
+    .x = va.x - vb.x,
+    .y = va.y - vb.y,
+    .z = va.z - vb.z,
+  };
+}
+
+float
+gr_vector_3f_dot (gr_vector_3f_t va, gr_vector_3f_t vb)
+{
+  return va.x * vb.x + va.y * vb.y + va.z * vb.z;
+}
+
+gr_vector_3f_t
+gr_vector_3f_scale (gr_vector_3f_t va, float scalar)
+{
+  return (gr_vector_3f_t){
+    .x = va.x * scalar,
+    .y = va.y * scalar,
+    .z = va.z * scalar,
+  };
+}

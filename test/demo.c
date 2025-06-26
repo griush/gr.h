@@ -78,4 +78,13 @@ main (void)
 
   float f = gr_lerp (0.0, 1.0, 0.5);
   printf ("lerp: %f\n", f);
+
+  // vectors
+  gr_vector_2f_t acceleration = (gr_vector_2f_t){
+    .x = 1.0f,
+    .y = 2.0,
+  };
+  gr_vector_2f_t velocity = gr_vector_2f_add (
+      gr_vector_2f_zero (), gr_vector_2f_scale (acceleration, 2.0));
+  printf ("x: %.3f, y: %.3f\n", velocity.x, velocity.y);
 }

@@ -237,4 +237,29 @@ void _gr_da_clear (void *arr);
  */
 #define gr_lerp(a, b, t) (a + (b - a) * t)
 
+typedef struct
+{
+  float x;
+  float y;
+} gr_vector_2f_t;
+
+typedef struct
+{
+  float x;
+  float y;
+  float z;
+} gr_vector_3f_t;
+
+gr_vector_2f_t gr_vector_2f_zero ();
+gr_vector_2f_t gr_vector_2f_add (gr_vector_2f_t va, gr_vector_2f_t vb);
+gr_vector_2f_t gr_vector_2f_sub (gr_vector_2f_t va, gr_vector_2f_t vb);
+gr_vector_2f_t gr_vector_2f_scale (gr_vector_2f_t va, float scalar);
+float gr_vector_2f_dot (gr_vector_2f_t va, gr_vector_2f_t vb);
+
+gr_vector_3f_t gr_vector_3f_zero ();
+gr_vector_3f_t gr_vector_3f_add (gr_vector_3f_t va, gr_vector_3f_t vb);
+gr_vector_3f_t gr_vector_3f_sub (gr_vector_3f_t va, gr_vector_3f_t vb);
+gr_vector_3f_t gr_vector_3f_scale (gr_vector_3f_t va, float scalar);
+float gr_vector_3f_dot (gr_vector_3f_t va, gr_vector_3f_t vb);
+
 #endif // !GR_H
